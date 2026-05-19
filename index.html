@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+
+<html class="light" lang="id">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>SentimentAnalisis — Gojek Review Analysis</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-variant": "#e1e3e4",
+                        "background": "#f8f9fa",
+                        "on-tertiary": "#ffffff",
+                        "on-tertiary-container": "#2b2b2b",
+                        "on-secondary-container": "#fffbff",
+                        "surface": "#f8f9fa",
+                        "on-surface": "#191c1d",
+                        "error": "#ba1a1a",
+                        "outline": "#6d7b67",
+                        "surface-container-highest": "#e1e3e4",
+                        "surface-container-high": "#e7e8e9",
+                        "primary-fixed-dim": "#56e24b",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-bright": "#f8f9fa",
+                        "secondary": "#b51925",
+                        "on-tertiary-fixed-variant": "#474746",
+                        "on-secondary-fixed-variant": "#930015",
+                        "surface-tint": "#006e08",
+                        "on-background": "#191c1d",
+                        "on-error-container": "#93000a",
+                        "inverse-surface": "#2e3132",
+                        "surface-container-low": "#f3f4f5",
+                        "on-error": "#ffffff",
+                        "secondary-fixed-dim": "#ffb3ae",
+                        "on-primary-fixed-variant": "#005304",
+                        "surface-container": "#edeeef",
+                        "on-secondary": "#ffffff",
+                        "on-secondary-fixed": "#410004",
+                        "error-container": "#ffdad6",
+                        "primary-fixed": "#76ff66",
+                        "on-primary-container": "#003402",
+                        "outline-variant": "#bccbb4",
+                        "on-primary-fixed": "#002201",
+                        "inverse-primary": "#56e24b",
+                        "on-primary": "#ffffff",
+                        "primary-container": "#00aa13",
+                        "tertiary-fixed": "#e5e2e1",
+                        "tertiary-fixed-dim": "#c8c6c5",
+                        "tertiary": "#5f5e5e",
+                        "secondary-container": "#d8363a",
+                        "primary": "#006e08",
+                        "surface-dim": "#d9dadb",
+                        "secondary-fixed": "#ffdad7",
+                        "on-surface-variant": "#3e4a39",
+                        "tertiary-container": "#949291",
+                        "on-tertiary-fixed": "#1c1b1b",
+                        "inverse-on-surface": "#f0f1f2"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "2xl": "24px",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "sm": "8px",
+                        "xl": "32px",
+                        "gutter": "24px",
+                        "md": "16px",
+                        "base": "8px",
+                        "xs": "4px",
+                        "3xl": "64px",
+                        "2xl": "48px",
+                        "margin": "32px",
+                        "lg": "24px"
+                    },
+                    "fontFamily": {
+                        "headline-lg-mobile": ["Plus Jakarta Sans"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "headline-sm": ["Plus Jakarta Sans"],
+                        "body-md": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "body-sm": ["Plus Jakarta Sans"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "label-md": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "headline-lg-mobile": ["28px", { "lineHeight": "36px", "fontWeight": "700" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #f8f9fa;
+            color: #191c1d;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow-x: hidden;
+        }
+
+        .card-shadow {
+            box-shadow: 0 4px 20px 0 rgba(26, 26, 26, 0.04);
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .chart-donut {
+            background: conic-gradient(#00AA13 0% 35%, #d8363a 35% 100%);
+            border-radius: 50%;
+            width: 200px;
+            height: 200px;
+            position: relative;
+        }
+
+        .chart-donut::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 140px;
+            height: 140px;
+            background: #ffffff;
+            border-radius: 50%;
+        }
+
+        .bar-gradient {
+            background: linear-gradient(90deg, #00AA13 0%, #56e24b 100%);
+        }
+
+        .glass-nav {
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+    </style>
+    <style>
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Top Navigation Shell -->
+    <header class="sticky top-0 w-full z-50 glass-nav bg-surface/80">
+        <div class="flex justify-between items-center max-w-[1440px] mx-auto px-margin h-20">
+            <div class="flex items-center gap-sm">
+                <span class="material-symbols-outlined text-primary text-headline-md"
+                    style="font-variation-settings: 'FILL' 1;">analytics</span>
+                <span
+                    class="text-headline-md font-headline-md font-bold text-primary tracking-tight">SentimentAnalisis</span>
+            </div>
+            <nav class="hidden md:flex items-center gap-lg">
+                <a class="text-primary font-bold border-b-2 border-primary pb-1 font-label-md text-label-md"
+                    href="#">Dashboard</a>
+                <a class="text-on-surface-variant hover:text-primary transition-colors font-label-md text-label-md"
+                    href="#distribution">Distribution</a>
+                <a class="text-on-surface-variant hover:text-primary transition-colors font-label-md text-label-md"
+                    href="#models">Comparison</a>
+                <a class="text-on-surface-variant hover:text-primary transition-colors font-label-md text-label-md"
+                    href="#testing">Testing Model</a>
+                <!-- <button
+                    class="bg-primary-container text-on-tertiary px-lg py-sm rounded-full font-label-md text-label-md hover:opacity-90 transition-opacity">Contact</button> -->
+            </nav>
+            <button class="md:hidden material-symbols-outlined text-on-surface">menu</button>
+        </div>
+    </header>
+    <main class="max-w-[1440px] mx-auto px-margin py-xl space-y-3xl">
+        <!-- Hero Section -->
+        <section class="flex flex-col lg:flex-row items-center justify-between gap-xl">
+            <div class="flex-1 space-y-md text-center lg:text-left">
+                <h1 class="text-display-lg font-display-lg leading-tight">Analisis Sentimen <br /><span
+                        class="text-primary-container">Ulasan Gojek</span></h1>
+                <p class="text-body-lg font-body-lg text-on-surface-variant max-w-xl">
+                    Studi mendalam terhadap 15.000 ulasan Google Play Store menggunakan pendekatan Natural Language
+                    Processing untuk memahami kepuasan pelanggan Gojek di Indonesia.
+                </p>
+                <div class="flex flex-wrap gap-md justify-center lg:justify-start pt-md">
+                    <a href="data_gojek_15000.csv" download="data_gojek_15000.csv"
+                        class="bg-primary-container text-white h-[48px] px-2xl rounded-full font-headline-sm flex items-center gap-sm active:scale-95 transition-transform no-underline">
+                        <span class="material-symbols-outlined">download</span>
+                        Download Dataset
+                    </a>
+                </div>
+            </div>
+            <div class="flex-1 w-full max-w-xl">
+                <div
+                    class="relative bg-surface-container rounded-2xl p-xl overflow-hidden aspect-video flex items-center justify-center">
+                    <img alt="Dashboard Visualization" class="rounded-xl shadow-2xl object-cover w-full h-full"
+                        data-alt="A clean, minimalist high-fidelity dashboard interface displayed on a sleek laptop screen. The screen shows vibrant green and coral sentiment charts and data visualizations. The background is a soft, bright office setting with high-key lighting, emphasizing a professional Corporate Minimalism aesthetic. The overall mood is technologically advanced, precise, and sophisticated."
+                        src="f4cef1a4e915a2da25354282396f679c_81e107102e.webp" />
+                </div>
+            </div>
+        </section>
+        <!-- Overview Metrics -->
+        <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-lg">
+            <div class="bg-white p-lg rounded-2xl card-shadow border-l-4 border-primary space-y-sm">
+                <span class="material-symbols-outlined text-on-surface-variant">reviews</span>
+                <p class="text-label-md font-label-md uppercase tracking-wider text-on-surface-variant">Total Review</p>
+                <h3 class="text-headline-lg font-headline-lg">15.000</h3>
+            </div>
+            <div class="bg-white p-lg rounded-2xl card-shadow border-l-4 border-primary-container space-y-sm">
+                <span class="material-symbols-outlined text-primary-container">mood</span>
+                <p class="text-label-md font-label-md uppercase tracking-wider text-on-surface-variant">Positive
+                    Sentiments</p>
+                <h3 class="text-headline-lg font-headline-lg">5.257</h3>
+            </div>
+            <div class="bg-white p-lg rounded-2xl card-shadow border-l-4 border-secondary-container space-y-sm">
+                <span class="material-symbols-outlined text-secondary-container">mood_bad</span>
+                <p class="text-label-md font-label-md uppercase tracking-wider text-on-surface-variant">Negative
+                    Sentiments</p>
+                <h3 class="text-headline-lg font-headline-lg">9.743</h3>
+            </div>
+            <div class="bg-white p-lg rounded-2xl card-shadow border-l-4 border-primary space-y-sm">
+                <span class="material-symbols-outlined text-on-surface-variant">verified</span>
+                <p class="text-label-md font-label-md uppercase tracking-wider text-on-surface-variant">Accuracy Rate
+                </p>
+                <h3 class="text-headline-lg font-headline-lg text-primary">85%</h3>
+            </div>
+        </section>
+        <!-- Sentiment Distribution -->
+        <section class="bg-white p-xl rounded-2xl card-shadow grid grid-cols-1 lg:grid-cols-2 gap-2xl items-center"
+            id="distribution">
+            <div class="flex flex-col items-center justify-center space-y-lg">
+                <h4 class="text-headline-sm font-headline-sm">Proporsi Sentimen Keseluruhan</h4>
+                <div class="chart-donut">
+                    <div class="absolute inset-0 flex flex-col items-center justify-center z-10">
+                        <span class="text-display-lg font-display-lg text-on-surface">65%</span>
+                        <span class="text-label-md font-label-md text-on-surface-variant">NEGATIVE</span>
+                    </div>
+                </div>
+                <div class="flex gap-xl pt-md">
+                    <div class="flex items-center gap-xs">
+                        <div class="w-3 h-3 rounded-full bg-primary-container"></div>
+                        <span class="text-body-sm font-body-sm">Positif (35%)</span>
+                    </div>
+                    <div class="flex items-center gap-xs">
+                        <div class="w-3 h-3 rounded-full bg-secondary-container"></div>
+                        <span class="text-body-sm font-body-sm">Negatif (65%)</span>
+                    </div>
+                </div>
+            </div>
+            <div class="space-y-md">
+                <h3 class="text-headline-md font-headline-md">Metode Lexicon-Based</h3>
+                <p class="text-body-md font-body-md text-on-surface-variant">
+                    Klasifikasi awal dilakukan menggunakan pendekatan Lexicon-Based. Metode ini mencocokkan kata-kata
+                    dalam ulasan dengan kamus sentimen bahasa Indonesia (VADER-translated or InSet) untuk menentukan
+                    skor polaritas.
+                </p>
+                <ul class="space-y-sm">
+                    <li class="flex items-start gap-sm">
+                        <span class="material-symbols-outlined text-primary">check_circle</span>
+                        <span class="text-body-md font-body-md">Pemetaan kata kunci otomatis tanpa pelatihan model
+                            awal.</span>
+                    </li>
+                    <li class="flex items-start gap-sm">
+                        <span class="material-symbols-outlined text-primary">check_circle</span>
+                        <span class="text-body-md font-body-md">Mampu menangani volume data besar dengan cepat.</span>
+                    </li>
+                    <li class="flex items-start gap-sm">
+                        <span class="material-symbols-outlined text-primary">check_circle</span>
+                        <span class="text-body-md font-body-md">Memberikan label 'seed' yang akurat untuk model machine
+                            learning selanjutnya.</span>
+                    </li>
+                </ul>
+            </div>
+        </section>
+        <!-- Top Words (Bento Grid Style Content) -->
+        <section class="space-y-lg">
+            <div class="flex justify-between items-end">
+                <div class="space-y-xs">
+                    <h2 class="text-headline-md font-headline-md">Top 20 Kata Terpopuler</h2>
+                    <p class="text-body-sm font-body-sm text-on-surface-variant">Frekuensi kata yang paling sering
+                        muncul setelah tahap preprocessing.</p>
+                </div>
+                <span class="text-label-md font-label-md bg-surface-container px-md py-xs rounded-full">Unit: Frequency
+                    Count</span>
+            </div>
+            <div class="bg-white p-xl rounded-2xl card-shadow overflow-hidden">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-xl gap-y-sm">
+                    <!-- Dynamic Rendering simulation for the 20 words -->
+                    <div class="space-y-sm">
+                        <div class="flex items-center gap-md">
+                            <span class="w-20 text-body-sm font-body-sm text-right">aplikasi</span>
+                            <div class="flex-1 h-3 bg-surface-container rounded-full overflow-hidden">
+                                <div class="h-full bar-gradient" style="width: 95%"></div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-md">
+                            <span class="w-20 text-body-sm font-body-sm text-right">pengemudi</span>
+                            <div class="flex-1 h-3 bg-surface-container rounded-full overflow-hidden">
+                                <div class="h-full bar-gradient" style="width: 88%"></div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-md">
+                            <span class="w-20 text-body-sm font-body-sm text-right">makanan</span>
+                            <div class="flex-1 h-3 bg-surface-container rounded-full overflow-hidden">
+                                <div class="h-full bar-gradient" style="width: 82%"></div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-md">
+                            <span class="w-20 text-body-sm font-body-sm text-right">bayar</span>
+                            <div class="flex-1 h-3 bg-surface-container rounded-full overflow-hidden">
+                                <div class="h-full bar-gradient" style="width: 78%"></div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-md">
+                            <span class="w-20 text-body-sm font-body-sm text-right">pesan</span>
+                            <div class="flex-1 h-3 bg-surface-container rounded-full overflow-hidden">
+                                <div class="h-full bar-gradient" style="width: 75%"></div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-md">
+                            <span class="w-20 text-body-sm font-body-sm text-right">tolong</span>
+                            <div class="flex-1 h-3 bg-surface-container rounded-full overflow-hidden">
+                                <div class="h-full bar-gradient" style="width: 70%"></div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-md">
+                            <span class="w-20 text-body-sm font-body-sm text-right">pakai</span>
+                            <div class="flex-1 h-3 bg-surface-container rounded-full overflow-hidden">
+                                <div class="h-full bar-gradient" style="width: 68%"></div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-md">
+                            <span class="w-20 text-body-sm font-body-sm text-right">promo</span>
+                            <div class="flex-1 h-3 bg-surface-container rounded-full overflow-hidden">
+                                <div class="h-full bar-gradient" style="width: 65%"></div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-md">
+                            <span class="w-20 text-body-sm font-body-sm text-right">kasih</span>
+                            <div class="flex-1 h-3 bg-surface-container rounded-full overflow-hidden">
+                                <div class="h-full bar-gradient" style="width: 62%"></div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-md">
+                            <span class="w-20 text-body-sm font-body-sm text-right">harga</span>
+                            <div class="flex-1 h-3 bg-surface-container rounded-full overflow-hidden">
+                                <div class="h-full bar-gradient" style="width: 60%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="space-y-sm">
+                        <div class="flex items-center gap-md">
+                            <span class="w-20 text-body-sm font-body-sm text-right">pelanggan</span>
+                            <div class="flex-1 h-3 bg-surface-container rounded-full overflow-hidden">
+                                <div class="h-full bar-gradient" style="width: 58%"></div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-md">
+                            <span class="w-20 text-body-sm font-body-sm text-right">batalkan</span>
+                            <div class="flex-1 h-3 bg-surface-container rounded-full overflow-hidden">
+                                <div class="h-full bar-gradient" style="width: 55%"></div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-md">
+                            <span class="w-20 text-body-sm font-body-sm text-right">pesanan</span>
+                            <div class="flex-1 h-3 bg-surface-container rounded-full overflow-hidden">
+                                <div class="h-full bar-gradient" style="width: 52%"></div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-md">
+                            <span class="w-20 text-body-sm font-body-sm text-right">kali</span>
+                            <div class="flex-1 h-3 bg-surface-container rounded-full overflow-hidden">
+                                <div class="h-full bar-gradient" style="width: 50%"></div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-md">
+                            <span class="w-20 text-body-sm font-body-sm text-right">kirim</span>
+                            <div class="flex-1 h-3 bg-surface-container rounded-full overflow-hidden">
+                                <div class="h-full bar-gradient" style="width: 48%"></div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-md">
+                            <span class="w-20 text-body-sm font-body-sm text-right">kecewa</span>
+                            <div class="flex-1 h-3 bg-surface-container rounded-full overflow-hidden">
+                                <div class="h-full bar-gradient" style="width: 45%"></div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-md">
+                            <span class="w-20 text-body-sm font-body-sm text-right">saldo</span>
+                            <div class="flex-1 h-3 bg-surface-container rounded-full overflow-hidden">
+                                <div class="h-full bar-gradient" style="width: 42%"></div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-md">
+                            <span class="w-20 text-body-sm font-body-sm text-right">nunggu</span>
+                            <div class="flex-1 h-3 bg-surface-container rounded-full overflow-hidden">
+                                <div class="h-full bar-gradient" style="width: 40%"></div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-md">
+                            <span class="w-20 text-body-sm font-body-sm text-right">bagus</span>
+                            <div class="flex-1 h-3 bg-surface-container rounded-full overflow-hidden">
+                                <div class="h-full bar-gradient" style="width: 38%"></div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-md">
+                            <span class="w-20 text-body-sm font-body-sm text-right">cepat</span>
+                            <div class="flex-1 h-3 bg-surface-container rounded-full overflow-hidden">
+                                <div class="h-full bar-gradient" style="width: 35%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Model Comparison -->
+        <section class="space-y-lg" id="models">
+            <div class="text-center space-y-xs">
+                <h2 class="text-headline-lg font-headline-lg">Model Machine Learning</h2>
+                <p class="text-body-md font-body-md text-on-surface-variant">Perbandingan akurasi antara berbagai
+                    arsitektur model.</p>
+            </div>
+            <div class="bg-white rounded-2xl card-shadow overflow-hidden">
+                <table class="w-full text-left border-collapse">
+                    <thead class="bg-surface-container">
+                        <tr>
+                            <th class="px-lg py-md text-label-md font-label-md text-on-surface-variant">Model
+                                Architecture</th>
+                            <th class="px-lg py-md text-label-md font-label-md text-on-surface-variant">Train Accuracy
+                            </th>
+                            <th class="px-lg py-md text-label-md font-label-md text-on-surface-variant">Test Accuracy
+                            </th>
+                            <th class="px-lg py-md text-label-md font-label-md text-on-surface-variant">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-surface-container">
+                        <tr class="bg-primary/5">
+                            <td class="px-lg py-lg font-headline-sm text-primary">Logistic Regression</td>
+                            <td class="px-lg py-lg text-body-lg font-bold">85%</td>
+                            <td class="px-lg py-lg text-body-lg font-bold">85%</td>
+                            <td class="px-lg py-lg">
+                                <span
+                                    class="bg-primary-container/10 text-primary-container px-md py-xs rounded-full text-label-md">Most
+                                    Stable</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="px-lg py-lg font-body-md font-semibold">Random Forest</td>
+                            <td class="px-lg py-lg text-body-md">92%</td>
+                            <td class="px-lg py-lg text-body-md">83%</td>
+                            <td class="px-lg py-lg text-on-surface-variant text-label-md">Overfitting</td>
+                        </tr>
+                        <tr>
+                            <td class="px-lg py-lg font-body-md font-semibold">SVM (RBF Kernel)</td>
+                            <td class="px-lg py-lg text-body-md">87%</td>
+                            <td class="px-lg py-lg text-body-md">84%</td>
+                            <td class="px-lg py-lg text-on-surface-variant text-label-md">High Compute</td>
+                        </tr>
+                        <tr>
+                            <td class="px-lg py-lg font-body-md font-semibold">Naive Bayes</td>
+                            <td class="px-lg py-lg text-body-md">80%</td>
+                            <td class="px-lg py-lg text-body-md">79%</td>
+                            <td class="px-lg py-lg text-on-surface-variant text-label-md">Baseline</td>
+                        </tr>
+                        <tr>
+                            <td class="px-lg py-lg font-body-md font-semibold">Decision Tree</td>
+                            <td class="px-lg py-lg text-body-md">88%</td>
+                            <td class="px-lg py-lg text-body-md">76%</td>
+                            <td class="px-lg py-lg text-on-surface-variant text-label-md">Unstable</td>
+                        </tr>
+                        <tr>
+                            <td class="px-lg py-lg font-body-md font-semibold">XGBoost</td>
+                            <td class="px-lg py-lg text-body-md">86%</td>
+                            <td class="px-lg py-lg text-body-md">84%</td>
+                            <td class="px-lg py-lg text-on-surface-variant text-label-md">Optimized</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+        <!-- Preprocessing Flow -->
+        <section class="bg-white p-xl rounded-2xl card-shadow overflow-x-auto">
+            <h2 class="text-headline-md font-headline-md mb-2xl text-center">Pipeline Preprocessing Data</h2>
+            <div class="flex items-center min-w-[1000px] px-lg">
+                <div class="flex-1 flex flex-col items-center text-center gap-md">
+                    <div
+                        class="w-16 h-16 rounded-full bg-surface-container flex items-center justify-center text-primary">
+                        <span class="material-symbols-outlined text-headline-md">description</span>
+                    </div>
+                    <div>
+                        <p class="font-bold text-body-md">Data Mentah</p>
+                        <p class="text-label-md text-on-surface-variant">Raw CSV</p>
+                    </div>
+                </div>
+                <div class="w-12 h-0.5 bg-surface-container"></div>
+                <div class="flex-1 flex flex-col items-center text-center gap-md">
+                    <div
+                        class="w-16 h-16 rounded-full bg-surface-container flex items-center justify-center text-primary">
+                        <span class="material-symbols-outlined text-headline-md">cleaning_services</span>
+                    </div>
+                    <div>
+                        <p class="font-bold text-body-md">Cleaning</p>
+                        <p class="text-label-md text-on-surface-variant">Regex/Symbols</p>
+                    </div>
+                </div>
+                <div class="w-12 h-0.5 bg-surface-container"></div>
+                <div class="flex-1 flex flex-col items-center text-center gap-md">
+                    <div
+                        class="w-16 h-16 rounded-full bg-surface-container flex items-center justify-center text-primary">
+                        <span class="material-symbols-outlined text-headline-md">lowercase</span>
+                    </div>
+                    <div>
+                        <p class="font-bold text-body-md">Casefolding</p>
+                        <p class="text-label-md text-on-surface-variant">Lowercasing</p>
+                    </div>
+                </div>
+                <div class="w-12 h-0.5 bg-surface-container"></div>
+                <div class="flex-1 flex flex-col items-center text-center gap-md">
+                    <div
+                        class="w-16 h-16 rounded-full bg-surface-container flex items-center justify-center text-primary">
+                        <span class="material-symbols-outlined text-headline-md">spellcheck</span>
+                    </div>
+                    <div>
+                        <p class="font-bold text-body-md">Slangword Fix</p>
+                        <p class="text-label-md text-on-surface-variant">Normalisasi</p>
+                    </div>
+                </div>
+                <div class="w-12 h-0.5 bg-surface-container"></div>
+                <div class="flex-1 flex flex-col items-center text-center gap-md">
+                    <div
+                        class="w-16 h-16 rounded-full bg-surface-container flex items-center justify-center text-primary">
+                        <span class="material-symbols-outlined text-headline-md">segment</span>
+                    </div>
+                    <div>
+                        <p class="font-bold text-body-md">Tokenizing</p>
+                        <p class="text-label-md text-on-surface-variant">Word Splitting</p>
+                    </div>
+                </div>
+                <div class="w-12 h-0.5 bg-surface-container"></div>
+                <div class="flex-1 flex flex-col items-center text-center gap-md">
+                    <div
+                        class="w-16 h-16 rounded-full bg-surface-container flex items-center justify-center text-primary">
+                        <span class="material-symbols-outlined text-headline-md">delete_sweep</span>
+                    </div>
+                    <div>
+                        <p class="font-bold text-body-md">Stopword Removal</p>
+                        <p class="text-label-md text-on-surface-variant">Filtering</p>
+                    </div>
+                </div>
+                <div class="w-12 h-0.5 bg-surface-container"></div>
+                <div class="flex-1 flex flex-col items-center text-center gap-md">
+                    <div
+                        class="w-16 h-16 rounded-full bg-primary-container flex items-center justify-center text-white">
+                        <span class="material-symbols-outlined text-headline-md">task_alt</span>
+                    </div>
+                    <div>
+                        <p class="font-bold text-body-md text-primary">Teks Bersih</p>
+                        <p class="text-label-md text-on-surface-variant">Ready for Vectorizing</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Review Examples -->
+        <section class="space-y-lg">
+            <h2 class="text-headline-md font-headline-md">Contoh Klasifikasi Ulasan</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-lg">
+                <div class="bg-white p-lg rounded-2xl card-shadow border-2 border-primary-container relative">
+                    <div
+                        class="absolute -top-3 right-6 bg-primary-container text-white px-md py-xs rounded-full text-label-md">
+                        Positif</div>
+                    <div class="space-y-md">
+                        <div class="flex items-center gap-sm">
+                            <span class="material-symbols-outlined text-primary-container"
+                                style="font-variation-settings: 'FILL' 1;">star</span>
+                            <span class="material-symbols-outlined text-primary-container"
+                                style="font-variation-settings: 'FILL' 1;">star</span>
+                            <span class="material-symbols-outlined text-primary-container"
+                                style="font-variation-settings: 'FILL' 1;">star</span>
+                            <span class="material-symbols-outlined text-primary-container"
+                                style="font-variation-settings: 'FILL' 1;">star</span>
+                            <span class="material-symbols-outlined text-primary-container"
+                                style="font-variation-settings: 'FILL' 1;">star</span>
+                        </div>
+                        <p class="text-body-md italic text-on-surface">"Aplikasi sangat membantu buat pesan makanan pas
+                            lagi malas keluar. Drivernya ramah dan pengiriman cepat banget. Makasih Gojek!"</p>
+                        <div class="pt-sm border-t border-surface-container flex justify-between">
+                            <span class="text-label-md text-on-surface-variant italic">#FoodDelivery
+                                #ExcellentService</span>
+                            <span class="text-label-md font-bold text-primary-container">Score: +0.85</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white p-lg rounded-2xl card-shadow border-2 border-secondary-container relative">
+                    <div
+                        class="absolute -top-3 right-6 bg-secondary-container text-white px-md py-xs rounded-full text-label-md">
+                        Negatif</div>
+                    <div class="space-y-md">
+                        <div class="flex items-center gap-sm">
+                            <span class="material-symbols-outlined text-secondary-container"
+                                style="font-variation-settings: 'FILL' 1;">star</span>
+                            <span class="material-symbols-outlined text-outline-variant">star</span>
+                            <span class="material-symbols-outlined text-outline-variant">star</span>
+                            <span class="material-symbols-outlined text-outline-variant">star</span>
+                            <span class="material-symbols-outlined text-outline-variant">star</span>
+                        </div>
+                        <p class="text-body-md italic text-on-surface">"Kenapa sekarang sering error pas mau bayar pakai
+                            saldo? Padahal internet lancar. Nunggu lama ujung-ujungnya dibatalkan otomatis sama sistem.
+                            Kecewa parah."</p>
+                        <div class="pt-sm border-t border-surface-container flex justify-between">
+                            <span class="text-label-md text-on-surface-variant italic">#PaymentError
+                                #SystemGlitch</span>
+                            <span class="text-label-md font-bold text-secondary-container">Score: -0.92</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Testing Model Logistic Regression -->
+        <section class="bg-white p-xl rounded-2xl card-shadow space-y-lg" id="testing">
+            <div class="text-center space-y-xs">
+                <h2 class="text-headline-lg font-headline-lg">Testing Model <span class="text-primary">Logistic
+                        Regression</span></h2>
+                <p class="text-body-md font-body-md text-on-surface-variant">Masukkan ulasan untuk memprediksi sentimen
+                    menggunakan model Logistic Regression (Akurasi 85%).</p>
+            </div>
+            <div class="max-w-3xl mx-auto space-y-lg">
+                <div class="space-y-sm">
+                    <label class="text-label-md font-label-md uppercase tracking-wider text-on-surface-variant"
+                        for="inputReview">Input Ulasan</label>
+                    <textarea id="inputReview" rows="4"
+                        placeholder="Contoh: aplikasi Gojek jelek dan tidak membantu sama sekali..."
+                        class="w-full p-lg border-2 border-surface-container rounded-2xl text-body-md font-body-md focus:border-primary focus:outline-none resize-none transition-colors bg-surface-container-lowest"></textarea>
+                </div>
+                <div class="flex flex-wrap gap-md items-center">
+                    <button id="btnAnalyze" onclick="analyzeSentiment()"
+                        class="bg-primary-container text-white h-[48px] px-2xl rounded-full font-headline-sm flex items-center gap-sm active:scale-95 transition-transform hover:opacity-90">
+                        <span class="material-symbols-outlined">psychology</span>
+                        Analisis Sentimen
+                    </button>
+                    <button
+                        onclick="document.getElementById('inputReview').value=''; document.getElementById('resultArea').classList.add('hidden');"
+                        class="border-2 border-surface-container text-on-surface-variant h-[48px] px-xl rounded-full font-headline-sm flex items-center gap-sm active:scale-95 transition-transform hover:border-primary hover:text-primary">
+                        <span class="material-symbols-outlined">restart_alt</span>
+                        Reset
+                    </button>
+                    <div class="flex gap-sm ml-auto">
+                        <button onclick="setExample('positive')"
+                            class="text-label-md border border-primary-container text-primary-container px-md py-xs rounded-full hover:bg-primary-container/10 transition-colors">Contoh
+                            Positif</button>
+                        <button onclick="setExample('negative')"
+                            class="text-label-md border border-secondary-container text-secondary-container px-md py-xs rounded-full hover:bg-secondary-container/10 transition-colors">Contoh
+                            Negatif</button>
+                    </div>
+                </div>
+                <!-- Result Area -->
+                <div id="resultArea" class="hidden space-y-lg animate-fade-in">
+                    <div id="resultCard" class="p-xl rounded-2xl border-2 space-y-md">
+                        <div class="flex items-center justify-between flex-wrap gap-md">
+                            <div class="flex items-center gap-md">
+                                <span id="resultIcon" class="material-symbols-outlined text-[40px]"
+                                    style="font-variation-settings: 'FILL' 1;"></span>
+                                <div>
+                                    <p
+                                        class="text-label-md font-label-md uppercase tracking-wider text-on-surface-variant">
+                                        Prediksi Sentimen</p>
+                                    <h3 id="resultLabel" class="text-headline-md font-headline-md"></h3>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-label-md text-on-surface-variant">Skor Polaritas</p>
+                                <h3 id="resultScore" class="text-headline-lg font-headline-lg"></h3>
+                            </div>
+                        </div>
+                        <div class="space-y-xs">
+                            <div class="flex justify-between text-label-md">
+                                <span>Confidence Level</span>
+                                <span id="confidencePercent"></span>
+                            </div>
+                            <div class="w-full h-3 bg-surface-container rounded-full overflow-hidden">
+                                <div id="confidenceBar" class="h-full rounded-full transition-all duration-700"></div>
+                            </div>
+                        </div>
+                        <div id="keywordsArea" class="pt-sm border-t border-surface-container">
+                            <p class="text-label-md text-on-surface-variant mb-sm">Kata kunci terdeteksi:</p>
+                            <div id="keywordsList" class="flex flex-wrap gap-xs"></div>
+                        </div>
+                    </div>
+                    <div class="bg-surface-container-low p-md rounded-xl flex items-start gap-sm">
+                        <span class="material-symbols-outlined text-on-surface-variant text-body-md mt-0.5">info</span>
+                        <p class="text-body-sm text-on-surface-variant">Model ini menggunakan pendekatan Lexicon-Based
+                            Sentiment Analysis yang merupakan tahap pelabelan awal sebelum training Logistic Regression.
+                            Akurasi model pada data test mencapai <strong>85%</strong>.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Insights -->
+        <section class="bg-surface-container-low p-2xl rounded-2xl border border-outline-variant space-y-xl">
+            <div class="max-w-4xl mx-auto space-y-xl">
+                <div class="space-y-md">
+                    <h2 class="text-headline-lg font-headline-lg text-primary">Executive Insights</h2>
+                    <p class="text-body-lg text-on-surface-variant">
+                        Berdasarkan analisis 15.000 data, mayoritas sentimen bersifat negatif (65%), yang menunjukkan
+                        adanya celah signifikan antara ekspektasi pengguna dan realitas layanan.
+                    </p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-xl">
+                    <div class="space-y-md">
+                        <h4 class="font-headline-sm text-headline-sm flex items-center gap-sm">
+                            <span class="material-symbols-outlined text-secondary-container">report_problem</span>
+                            Temuan Utama
+                        </h4>
+                        <ul class="space-y-sm text-body-md text-on-surface-variant">
+                            <li>• Isu utama terletak pada kegagalan sistem pembayaran dan pembatalan otomatis.</li>
+                            <li>• Kata "nunggu" dan "kecewa" sering muncul bersamaan dengan kategori layanan
+                                transportasi.</li>
+                            <li>• Pengguna sangat sensitif terhadap perubahan harga dan ketersediaan promo.</li>
+                        </ul>
+                    </div>
+                    <div class="space-y-md">
+                        <h4 class="font-headline-sm text-headline-sm flex items-center gap-sm">
+                            <span class="material-symbols-outlined text-primary-container">lightbulb</span>
+                            Rekomendasi Strategis
+                        </h4>
+                        <ul class="space-y-sm text-body-md text-on-surface-variant">
+                            <li>• Stabilitas infrastruktur pembayaran non-tunai harus menjadi prioritas teknis utama.
+                            </li>
+                            <li>• Perlu evaluasi algoritma matching driver untuk mengurangi tingkat pembatalan sepihak.
+                            </li>
+                            <li>• Optimalisasi UI/UX aplikasi untuk meminimalisir lag saat jam sibuk.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Dataset Information -->
+        <section class="bg-white p-xl rounded-2xl card-shadow space-y-xl">
+            <div class="text-center space-y-xs">
+                <h2 class="text-headline-lg font-headline-lg">Tentang Dataset</h2>
+                <p class="text-body-md font-body-md text-on-surface-variant">Informasi lengkap mengenai data yang digunakan dalam analisis ini.</p>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-2xl">
+                <div class="space-y-md">
+                    <h3 class="text-headline-sm font-headline-sm flex items-center gap-sm">
+                        <span class="material-symbols-outlined text-primary">dataset</span>
+                        Detail Dataset
+                    </h3>
+                    <div class="space-y-sm">
+                        <div class="flex justify-between py-sm border-b border-surface-container">
+                            <span class="text-body-md text-on-surface-variant">Sumber Data</span>
+                            <span class="text-body-md font-semibold">Google Play Store Reviews</span>
+                        </div>
+                        <div class="flex justify-between py-sm border-b border-surface-container">
+                            <span class="text-body-md text-on-surface-variant">Aplikasi</span>
+                            <span class="text-body-md font-semibold">Gojek Indonesia</span>
+                        </div>
+                        <div class="flex justify-between py-sm border-b border-surface-container">
+                            <span class="text-body-md text-on-surface-variant">Total Review</span>
+                            <span class="text-body-md font-semibold">15.000 ulasan</span>
+                        </div>
+                        <div class="flex justify-between py-sm border-b border-surface-container">
+                            <span class="text-body-md text-on-surface-variant">Periode Data</span>
+                            <span class="text-body-md font-semibold text-primary">Sept 2018 — Apr 2025</span>
+                        </div>
+                        <div class="flex justify-between py-sm border-b border-surface-container">
+                            <span class="text-body-md text-on-surface-variant">Rentang Waktu</span>
+                            <span class="text-body-md font-semibold">± 6,5 Tahun</span>
+                        </div>
+                        <div class="flex justify-between py-sm border-b border-surface-container">
+                            <span class="text-body-md text-on-surface-variant">Metode Scraping</span>
+                            <span class="text-body-md font-semibold">google-play-scraper (Python)</span>
+                        </div>
+                        <div class="flex justify-between py-sm">
+                            <span class="text-body-md text-on-surface-variant">Kolom Utama</span>
+                            <span class="text-body-md font-semibold">content, score, at, thumbsUpCount</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="space-y-lg">
+                    <h3 class="text-headline-sm font-headline-sm flex items-center gap-sm">
+                        <span class="material-symbols-outlined text-primary">bar_chart</span>
+                        Distribusi Review per Tahun
+                    </h3>
+                    <div class="space-y-sm">
+                        <div class="flex items-center gap-md"><span class="w-10 text-body-sm font-semibold text-right">2018</span><div class="flex-1 h-6 bg-surface-container rounded-full overflow-hidden"><div class="h-full bar-gradient rounded-full flex items-center justify-end pr-2" style="width:12.6%"><span class="text-white text-[10px] font-bold">565</span></div></div></div>
+                        <div class="flex items-center gap-md"><span class="w-10 text-body-sm font-semibold text-right">2019</span><div class="flex-1 h-6 bg-surface-container rounded-full overflow-hidden"><div class="h-full bar-gradient rounded-full flex items-center justify-end pr-2" style="width:36.7%"><span class="text-white text-[10px] font-bold">1.648</span></div></div></div>
+                        <div class="flex items-center gap-md"><span class="w-10 text-body-sm font-semibold text-right">2020</span><div class="flex-1 h-6 bg-surface-container rounded-full overflow-hidden"><div class="h-full bar-gradient rounded-full flex items-center justify-end pr-2" style="width:34.3%"><span class="text-white text-[10px] font-bold">1.543</span></div></div></div>
+                        <div class="flex items-center gap-md"><span class="w-10 text-body-sm font-semibold text-right">2021</span><div class="flex-1 h-6 bg-surface-container rounded-full overflow-hidden"><div class="h-full bar-gradient rounded-full flex items-center justify-end pr-2" style="width:37.7%"><span class="text-white text-[10px] font-bold">1.697</span></div></div></div>
+                        <div class="flex items-center gap-md"><span class="w-10 text-body-sm font-semibold text-right">2022</span><div class="flex-1 h-6 bg-surface-container rounded-full overflow-hidden"><div class="h-full bar-gradient rounded-full flex items-center justify-end pr-2" style="width:32.8%"><span class="text-white text-[10px] font-bold">1.473</span></div></div></div>
+                        <div class="flex items-center gap-md"><span class="w-10 text-body-sm font-semibold text-right">2023</span><div class="flex-1 h-6 bg-surface-container rounded-full overflow-hidden"><div class="h-full bar-gradient rounded-full flex items-center justify-end pr-2" style="width:30.1%"><span class="text-white text-[10px] font-bold">1.355</span></div></div></div>
+                        <div class="flex items-center gap-md"><span class="w-10 text-body-sm font-semibold text-right">2024</span><div class="flex-1 h-6 bg-surface-container rounded-full overflow-hidden"><div class="h-full bar-gradient rounded-full flex items-center justify-end pr-2" style="width:49.5%"><span class="text-white text-[10px] font-bold">2.223</span></div></div></div>
+                        <div class="flex items-center gap-md"><span class="w-10 text-body-sm font-semibold text-primary text-right">2025</span><div class="flex-1 h-6 bg-surface-container rounded-full overflow-hidden"><div class="h-full rounded-full flex items-center justify-end pr-2" style="width:100%;background:linear-gradient(90deg,#005304,#00AA13)"><span class="text-white text-[10px] font-bold">4.496</span></div></div></div>
+                    </div>
+                    <p class="text-body-sm text-on-surface-variant italic">* Tahun 2025 memiliki jumlah review terbanyak (30% dari total), menunjukkan peningkatan aktivitas pengguna.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+    <!-- Footer Shell -->
+    <footer class="bg-surface border-t border-outline-variant py-xl mt-3xl">
+        <div class="flex flex-col md:flex-row justify-between items-center max-w-[1440px] mx-auto px-margin gap-md">
+            <div class="flex items-center gap-sm">
+                <span class="text-label-md font-label-md font-bold text-on-surface">Analisis Sentimen Gojek — Adam
+                    Havenia Pratama</span>
+            </div>
+            <!-- <div class="flex gap-lg">
+                <a class="text-on-surface-variant hover:text-primary transition-colors text-label-md font-label-md"
+                    href="#">Privacy Policy</a>
+                <a class="text-on-surface-variant hover:text-primary transition-colors text-label-md font-label-md"
+                    href="#">Terms of Service</a>
+                <a class="text-on-surface-variant hover:text-primary transition-colors text-label-md font-label-md"
+                    href="#">API Documentation</a>
+            </div> -->
+        </div>
+    </footer>
+    <!-- FAB for Quick Actions -->
+    <a href="data_gojek_15000.csv" download="data_gojek_15000.csv"
+        class="fixed bottom-xl right-margin bg-primary-container text-white w-14 h-14 rounded-full shadow-2xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all z-40">
+        <span class="material-symbols-outlined">download</span>
+    </a>
+    <script>
+        // Simple scroll reveal or micro-interactions
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Interactive hover for cards
+        const cards = document.querySelectorAll('.card-shadow');
+        cards.forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-4px)';
+                card.style.transition = 'transform 0.3s ease';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(0)';
+            });
+        });
+
+        // === Sentiment Analysis Logic ===
+        const positiveWords = {
+            "bagus": 2, "baik": 2, "senang": 2, "suka": 2, "puas": 3, "cepat": 2, "ramah": 3, "mudah": 2, "nyaman": 3, "aman": 2,
+            "mantap": 3, "keren": 2, "hebat": 3, "sempurna": 4, "luar biasa": 4, "membantu": 3, "terima kasih": 3, "makasih": 3,
+            "recommended": 3, "lancar": 2, "murah": 2, "hemat": 2, "terjangkau": 2, "responsif": 2, "profesional": 3,
+            "memuaskan": 3, "terbaik": 4, "top": 2, "mantul": 3, "josss": 3, "joss": 3, "praktis": 2, "efisien": 2,
+            "sopan": 2, "bersih": 2, "rapi": 2, "tepat": 2, "akurat": 2, "seru": 2, "menyenangkan": 3, "berguna": 2,
+            "bermanfaat": 3, "handal": 2, "canggih": 2, "inovatif": 3, "worth": 2, "recommend": 3, "love": 2,
+            "sip": 2, "oke": 1, "ok": 1, "nice": 2, "great": 3, "good": 2, "best": 3, "excellent": 4, "amazing": 4,
+            "terbantu": 3, "memudahkan": 3, "terpercaya": 3, "setia": 2, "loyal": 2, "favorit": 3, "andalan": 3,
+            "stabil": 2, "reliable": 2, "update": 1, "berkembang": 2, "maju": 2, "positif": 2, "sukses": 3
+        };
+
+        const negativeWords = {
+            "jelek": -2, "buruk": -3, "lambat": -2, "lelet": -2, "lemot": -2, "kecewa": -3, "mahal": -2, "error": -3,
+            "gagal": -3, "rusak": -3, "bohong": -3, "tipu": -4, "nipu": -4, "parah": -3, "sampah": -4, "bodoh": -3,
+            "benci": -3, "kesal": -2, "marah": -2, "susah": -2, "sulit": -2, "ribet": -2, "batal": -2, "batalkan": -2,
+            "cancel": -2, "dibatalkan": -3, "hilang": -2, "rugi": -3, "zonk": -3, "mengecewakan": -4, "menyesal": -3,
+            "tidak bisa": -2, "tidak ada": -1, "gak bisa": -2, "gabisa": -2, "nunggu": -1, "lama": -1,
+            "komplain": -2, "keluhan": -2, "masalah": -2, "kendala": -2, "bug": -3, "crash": -3, "hang": -2,
+            "curang": -3, "licik": -3, "nakal": -2, "kasar": -3, "tidak sopan": -3, "sombong": -2,
+            "ancur": -3, "hancur": -3, "payah": -3, "worst": -4, "bad": -2, "terrible": -4, "horrible": -4,
+            "scam": -4, "fraud": -4, "fake": -3, "spam": -2, "annoying": -2, "worst": -4,
+            "potong": -1, "pemotongan": -2, "denda": -2, "suspend": -3, "blokir": -3,
+            "tidak membantu": -3, "tidak berguna": -3, "tidak jelas": -2, "mengecewakan": -4, "menipu": -4
+        };
+
+        const stopwords = new Set(["dan", "di", "ke", "dari", "yang", "untuk", "dengan", "ini", "itu", "pada",
+            "adalah", "akan", "juga", "sudah", "saya", "aku", "kamu", "dia", "mereka", "kita",
+            "bisa", "ada", "tidak", "bukan", "belum", "kalau", "jika", "atau", "tapi", "tetapi",
+            "lagi", "iya", "ya", "gak", "ga", "nya", "na", "sih", "ku", "loh", "kah", "woi", "woy",
+            "dong", "deh", "nih", "kan", "kok", "si", "lo", "gue", "gw", "lu", "udah", "udh",
+            "the", "a", "an", "is", "are", "was", "were", "be", "been", "being", "have", "has",
+            "had", "do", "does", "did", "will", "would", "shall", "should", "may", "might",
+            "se", "ter", "ber", "me", "men", "meng", "per", "pen", "peng"]);
+
+        function preprocessText(text) {
+            text = text.toLowerCase();
+            text = text.replace(/[^a-zA-Z\s]/g, ' ');
+            text = text.replace(/\s+/g, ' ').trim();
+            return text;
+        }
+
+        function analyzeSentiment() {
+            const input = document.getElementById('inputReview').value.trim();
+            if (!input) { alert('Masukkan ulasan terlebih dahulu!'); return; }
+
+            const cleaned = preprocessText(input);
+            const words = cleaned.split(' ').filter(w => w.length > 1 && !stopwords.has(w));
+
+            let score = 0;
+            const detectedPos = [];
+            const detectedNeg = [];
+
+            words.forEach(word => {
+                if (positiveWords[word]) { score += positiveWords[word]; detectedPos.push(word); }
+                if (negativeWords[word]) { score += negativeWords[word]; detectedNeg.push(word); }
+            });
+
+            // Check multi-word phrases
+            const cleanedLower = cleaned;
+            Object.keys(positiveWords).filter(k => k.includes(' ')).forEach(phrase => {
+                if (cleanedLower.includes(phrase)) { score += positiveWords[phrase]; detectedPos.push(phrase); }
+            });
+            Object.keys(negativeWords).filter(k => k.includes(' ')).forEach(phrase => {
+                if (cleanedLower.includes(phrase)) { score += negativeWords[phrase]; detectedNeg.push(phrase); }
+            });
+
+            const isPositive = score >= 0;
+            const absScore = Math.abs(score);
+            const maxPossible = Math.max(absScore, 10);
+            const confidence = Math.min(Math.round((absScore / maxPossible) * 100), 99);
+
+            displayResult(isPositive, score, confidence, [...new Set(detectedPos)], [...new Set(detectedNeg)]);
+        }
+
+        function displayResult(isPositive, score, confidence, posWords, negWords) {
+            const area = document.getElementById('resultArea');
+            const card = document.getElementById('resultCard');
+            const icon = document.getElementById('resultIcon');
+            const label = document.getElementById('resultLabel');
+            const scoreEl = document.getElementById('resultScore');
+            const confPercent = document.getElementById('confidencePercent');
+            const confBar = document.getElementById('confidenceBar');
+            const keywordsList = document.getElementById('keywordsList');
+
+            area.classList.remove('hidden');
+
+            if (isPositive) {
+                card.className = 'p-xl rounded-2xl border-2 space-y-md border-primary-container bg-primary-container/5';
+                icon.textContent = 'sentiment_satisfied';
+                icon.className = 'material-symbols-outlined text-[40px] text-primary-container';
+                icon.style.fontVariationSettings = "'FILL' 1";
+                label.textContent = 'POSITIF';
+                label.className = 'text-headline-md font-headline-md text-primary-container';
+                scoreEl.textContent = '+' + score;
+                scoreEl.className = 'text-headline-lg font-headline-lg text-primary-container';
+                confBar.style.background = 'linear-gradient(90deg, #00AA13, #56e24b)';
+            } else {
+                card.className = 'p-xl rounded-2xl border-2 space-y-md border-secondary-container bg-secondary-container/5';
+                icon.textContent = 'sentiment_dissatisfied';
+                icon.className = 'material-symbols-outlined text-[40px] text-secondary-container';
+                icon.style.fontVariationSettings = "'FILL' 1";
+                label.textContent = 'NEGATIF';
+                label.className = 'text-headline-md font-headline-md text-secondary-container';
+                scoreEl.textContent = score.toString();
+                scoreEl.className = 'text-headline-lg font-headline-lg text-secondary-container';
+                confBar.style.background = 'linear-gradient(90deg, #d8363a, #ff6b6b)';
+            }
+
+            confPercent.textContent = confidence + '%';
+            confBar.style.width = '0%';
+            setTimeout(() => { confBar.style.width = confidence + '%'; }, 100);
+
+            keywordsList.innerHTML = '';
+            posWords.forEach(w => {
+                keywordsList.innerHTML += `<span class="bg-primary-container/10 text-primary-container px-sm py-xs rounded-full text-label-md">+${w}</span>`;
+            });
+            negWords.forEach(w => {
+                keywordsList.innerHTML += `<span class="bg-secondary-container/10 text-secondary-container px-sm py-xs rounded-full text-label-md">-${w}</span>`;
+            });
+            if (posWords.length === 0 && negWords.length === 0) {
+                keywordsList.innerHTML = '<span class="text-label-md text-on-surface-variant italic">Tidak ada kata kunci sentimen terdeteksi (netral)</span>';
+            }
+
+            area.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        function setExample(type) {
+            const textarea = document.getElementById('inputReview');
+            if (type === 'positive') {
+                textarea.value = 'Aplikasi sangat membantu dan praktis buat pesan makanan. Drivernya ramah banget, pengiriman cepat. Harga juga terjangkau. Mantap Gojek, terima kasih!';
+            } else {
+                textarea.value = 'Aplikasi Gojek jelek dan tidak membantu sama sekali. Sering error, driver kasar, nunggu lama terus dibatalkan. Sangat mengecewakan, rugi pakai aplikasi ini.';
+            }
+            document.getElementById('resultArea').classList.add('hidden');
+        }
+    </script>
+</body>
+
+</html>
