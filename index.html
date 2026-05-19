@@ -5,7 +5,7 @@
 <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>SentimentAnalisis — Gojek Review Analysis</title>
+    <title>SentimentAnalysis — Gojek Review Analysis</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap"
         rel="stylesheet" />
@@ -174,7 +174,7 @@
                 <span class="material-symbols-outlined text-primary text-headline-md"
                     style="font-variation-settings: 'FILL' 1;">analytics</span>
                 <span
-                    class="text-headline-md font-headline-md font-bold text-primary tracking-tight">SentimentAnalisis</span>
+                    class="text-headline-md font-headline-md font-bold text-primary tracking-tight">SentimentAnalysis</span>
             </div>
             <nav class="hidden md:flex items-center gap-lg">
                 <a class="text-primary font-bold border-b-2 border-primary pb-1 font-label-md text-label-md"
@@ -756,7 +756,8 @@
         <section class="bg-white p-xl rounded-2xl card-shadow space-y-xl">
             <div class="text-center space-y-xs">
                 <h2 class="text-headline-lg font-headline-lg">Tentang Dataset</h2>
-                <p class="text-body-md font-body-md text-on-surface-variant">Informasi lengkap mengenai data yang digunakan dalam analisis ini.</p>
+                <p class="text-body-md font-body-md text-on-surface-variant">Informasi lengkap mengenai data yang
+                    digunakan dalam analisis ini.</p>
             </div>
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-2xl">
                 <div class="space-y-md">
@@ -801,16 +802,72 @@
                         Distribusi Review per Tahun
                     </h3>
                     <div class="space-y-sm">
-                        <div class="flex items-center gap-md"><span class="w-10 text-body-sm font-semibold text-right">2018</span><div class="flex-1 h-6 bg-surface-container rounded-full overflow-hidden"><div class="h-full bar-gradient rounded-full flex items-center justify-end pr-2" style="width:12.6%"><span class="text-white text-[10px] font-bold">565</span></div></div></div>
-                        <div class="flex items-center gap-md"><span class="w-10 text-body-sm font-semibold text-right">2019</span><div class="flex-1 h-6 bg-surface-container rounded-full overflow-hidden"><div class="h-full bar-gradient rounded-full flex items-center justify-end pr-2" style="width:36.7%"><span class="text-white text-[10px] font-bold">1.648</span></div></div></div>
-                        <div class="flex items-center gap-md"><span class="w-10 text-body-sm font-semibold text-right">2020</span><div class="flex-1 h-6 bg-surface-container rounded-full overflow-hidden"><div class="h-full bar-gradient rounded-full flex items-center justify-end pr-2" style="width:34.3%"><span class="text-white text-[10px] font-bold">1.543</span></div></div></div>
-                        <div class="flex items-center gap-md"><span class="w-10 text-body-sm font-semibold text-right">2021</span><div class="flex-1 h-6 bg-surface-container rounded-full overflow-hidden"><div class="h-full bar-gradient rounded-full flex items-center justify-end pr-2" style="width:37.7%"><span class="text-white text-[10px] font-bold">1.697</span></div></div></div>
-                        <div class="flex items-center gap-md"><span class="w-10 text-body-sm font-semibold text-right">2022</span><div class="flex-1 h-6 bg-surface-container rounded-full overflow-hidden"><div class="h-full bar-gradient rounded-full flex items-center justify-end pr-2" style="width:32.8%"><span class="text-white text-[10px] font-bold">1.473</span></div></div></div>
-                        <div class="flex items-center gap-md"><span class="w-10 text-body-sm font-semibold text-right">2023</span><div class="flex-1 h-6 bg-surface-container rounded-full overflow-hidden"><div class="h-full bar-gradient rounded-full flex items-center justify-end pr-2" style="width:30.1%"><span class="text-white text-[10px] font-bold">1.355</span></div></div></div>
-                        <div class="flex items-center gap-md"><span class="w-10 text-body-sm font-semibold text-right">2024</span><div class="flex-1 h-6 bg-surface-container rounded-full overflow-hidden"><div class="h-full bar-gradient rounded-full flex items-center justify-end pr-2" style="width:49.5%"><span class="text-white text-[10px] font-bold">2.223</span></div></div></div>
-                        <div class="flex items-center gap-md"><span class="w-10 text-body-sm font-semibold text-primary text-right">2025</span><div class="flex-1 h-6 bg-surface-container rounded-full overflow-hidden"><div class="h-full rounded-full flex items-center justify-end pr-2" style="width:100%;background:linear-gradient(90deg,#005304,#00AA13)"><span class="text-white text-[10px] font-bold">4.496</span></div></div></div>
+                        <div class="flex items-center gap-md"><span
+                                class="w-10 text-body-sm font-semibold text-right">2018</span>
+                            <div class="flex-1 h-6 bg-surface-container rounded-full overflow-hidden">
+                                <div class="h-full bar-gradient rounded-full flex items-center justify-end pr-2"
+                                    style="width:12.6%"><span class="text-white text-[10px] font-bold">565</span></div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-md"><span
+                                class="w-10 text-body-sm font-semibold text-right">2019</span>
+                            <div class="flex-1 h-6 bg-surface-container rounded-full overflow-hidden">
+                                <div class="h-full bar-gradient rounded-full flex items-center justify-end pr-2"
+                                    style="width:36.7%"><span class="text-white text-[10px] font-bold">1.648</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-md"><span
+                                class="w-10 text-body-sm font-semibold text-right">2020</span>
+                            <div class="flex-1 h-6 bg-surface-container rounded-full overflow-hidden">
+                                <div class="h-full bar-gradient rounded-full flex items-center justify-end pr-2"
+                                    style="width:34.3%"><span class="text-white text-[10px] font-bold">1.543</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-md"><span
+                                class="w-10 text-body-sm font-semibold text-right">2021</span>
+                            <div class="flex-1 h-6 bg-surface-container rounded-full overflow-hidden">
+                                <div class="h-full bar-gradient rounded-full flex items-center justify-end pr-2"
+                                    style="width:37.7%"><span class="text-white text-[10px] font-bold">1.697</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-md"><span
+                                class="w-10 text-body-sm font-semibold text-right">2022</span>
+                            <div class="flex-1 h-6 bg-surface-container rounded-full overflow-hidden">
+                                <div class="h-full bar-gradient rounded-full flex items-center justify-end pr-2"
+                                    style="width:32.8%"><span class="text-white text-[10px] font-bold">1.473</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-md"><span
+                                class="w-10 text-body-sm font-semibold text-right">2023</span>
+                            <div class="flex-1 h-6 bg-surface-container rounded-full overflow-hidden">
+                                <div class="h-full bar-gradient rounded-full flex items-center justify-end pr-2"
+                                    style="width:30.1%"><span class="text-white text-[10px] font-bold">1.355</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-md"><span
+                                class="w-10 text-body-sm font-semibold text-right">2024</span>
+                            <div class="flex-1 h-6 bg-surface-container rounded-full overflow-hidden">
+                                <div class="h-full bar-gradient rounded-full flex items-center justify-end pr-2"
+                                    style="width:49.5%"><span class="text-white text-[10px] font-bold">2.223</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-md"><span
+                                class="w-10 text-body-sm font-semibold text-primary text-right">2025</span>
+                            <div class="flex-1 h-6 bg-surface-container rounded-full overflow-hidden">
+                                <div class="h-full rounded-full flex items-center justify-end pr-2"
+                                    style="width:100%;background:linear-gradient(90deg,#005304,#00AA13)"><span
+                                        class="text-white text-[10px] font-bold">4.496</span></div>
+                            </div>
+                        </div>
                     </div>
-                    <p class="text-body-sm text-on-surface-variant italic">* Tahun 2025 memiliki jumlah review terbanyak (30% dari total), menunjukkan peningkatan aktivitas pengguna.</p>
+                    <p class="text-body-sm text-on-surface-variant italic">* Tahun 2025 memiliki jumlah review terbanyak
+                        (30% dari total), menunjukkan peningkatan aktivitas pengguna.</p>
                 </div>
             </div>
         </section>
